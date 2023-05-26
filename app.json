@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "AlifBoutique",
+    "slug": "AlifBoutique",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "com.hrushkoli.AlifBoutique"
+    }
+  }
+}
