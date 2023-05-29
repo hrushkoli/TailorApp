@@ -15,7 +15,6 @@ type PyjamaItemProps = {
 
 export const PyjamaItem = React.memo<PyjamaItemProps>(
   ({arr,onDelete}) => {
-    console.log("Inside LengthItem : arr is ",arr)
     return (
     <View style={styles.orders }>
       <Pressable style={styles.descriptionContainer} >

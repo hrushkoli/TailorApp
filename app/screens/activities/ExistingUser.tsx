@@ -2,7 +2,7 @@ import * as React from 'react';
 import {TaskRealmContext} from '../../models';
 import {Pressable,View,ScrollView,StyleSheet,Text,Image} from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import {Customer} from '../../models/Task';
 import {Order} from '../../models/Task';
 import {CustomerItem} from '../../components/CustomerItem';
@@ -49,30 +49,49 @@ export default function ExistingUser ({route,navigation}) {
         alert("Order Created")
 
       }catch(e){
-          console.log(e)
+          alert(e)
         }
 
       }
   }
+  
+
+  useEffect(() => {
+    realm.subscriptions.update(mutableSubs => {
+      mutableSubs.add(realm.objects(Customer));
+      mutableSubs.add(realm.objects(Order));
+    });
+  }, [realm, Customer, Order]);
+
 
   
   const onToggleStatus = (order)=>{
     console.log("order : ",order)
     const orderId = new Realm.BSON.ObjectID(order._id)
-    realm.write(
-    ()=>{
-        const selectedOrder = realm.objectForPrimaryKey("Order",orderId)
-        selectedOrder.isComplete = !selectedOrder.isComplete
+    try{
+      realm.write(
+      ()=>{
+          const selectedOrder = realm.objectForPrimaryKey("Order",orderId)
+          selectedOrder.isComplete = !selectedOrder.isComplete
+        }
+      )
+    }
+    catch(e){
+        alert(e)
       }
-    )
   }
 
   const onDeleteOrder= (order)=>{
+    try{
     realm.write(()=>{
         console.log("thisss is arrr",order)
         realm.delete(order)
         alert("Order Deleted")
       })
+    }
+    catch(e){
+        alert(e)
+      }
    } 
 
 

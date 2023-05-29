@@ -22,6 +22,8 @@ import CreateNewUser from "./screens/activities/CreateNewUser"
 import ExistingUser from "./screens/activities/ExistingUser"
 
 
+import {Customer,Note,Order,Sayya,Pyjama,Kurta} from './models/Task'
+
 
 const {useRealm, useQuery} = TaskRealmContext;
 
@@ -39,6 +41,18 @@ export const AppSync: React.FC = () => {
   const createNewUserName= "Create New User"
   const existingUserName = "Existing User"
   const Tab = createBottomTabNavigator();
+
+  const {useRealm} = TaskRealmContext;
+  useEffect(() => {
+    realm.subscriptions.update(mutableSubs => {
+      mutableSubs.add(realm.objects(Customer));
+      mutableSubs.add(realm.objects(Note));
+      mutableSubs.add(realm.objects(Order));
+      mutableSubs.add(realm.objects(Sayya));
+      mutableSubs.add(realm.objects(Pyjama));
+      mutableSubs.add(realm.objects(Kurta));
+    });
+  }, []);
 
   const HomeNavigation = () => {
       return(

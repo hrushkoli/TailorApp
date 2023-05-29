@@ -2,7 +2,7 @@ import * as React from 'react';
 import {TaskRealmContext} from '../../models';
 import {Pressable,View,ScrollView,StyleSheet,Text} from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import {Customer, Sayya, Order, Kurta, Pyjama,Note} from '../../models/Task';
 import {CustomerItem} from '../../components/CustomerItem';
 import {MeasurementHeader} from '../../components/MeasurementHeader';
@@ -32,12 +32,17 @@ export default function AddLengths ({route,navigation}) {
 
   const onToggleStatus = (order)=>{
     const orderId = new Realm.BSON.ObjectID(order._id)
-    realm.write(
-    ()=>{
-        const selectedOrder = realm.objectForPrimaryKey("Order",orderId)
-        selectedOrder.isComplete = !selectedOrder.isComplete
+    try{
+      realm.write(
+      ()=>{
+          const selectedOrder = realm.objectForPrimaryKey("Order",orderId)
+          selectedOrder.isComplete = !selectedOrder.isComplete
+        }
+      )
+    }
+    catch(e){
+      alert(e)
       }
-    )
   }
 
 
@@ -46,11 +51,11 @@ export default function AddLengths ({route,navigation}) {
      if (sayyaItems.length>0){
       t = t + 
       `
-      <h3 >
+      <b>
           Sayyas
-        </h3>
-        <table style="width:100%;text-align:center;border:1px solid;border-collapse:collapse;">
-        <tr>
+        </b>
+        <table style="border-radius:10px;width:100%;text-align:center;border:1px solid;border-collapse:collapse;">
+        <tr style="background:#32E0C4;">
           <th style="border:1px solid;">Cost</th>
           <th style="border:1px solid;">Length</th>
           <th style="border:1px solid;">Type</th>
@@ -76,11 +81,11 @@ export default function AddLengths ({route,navigation}) {
   const kurtatable = () => {
      let t = '';
      if (kurtaItems.length>0){
-       t = t + `<h3 ">
+       t = t + `<b>
           Kurtas 
-        </h3>
-        <table style="width:100%;text-align:center;border:1px solid;border-collapse:collapse;">
-        <tr>
+        </b>
+        <table style="border-radius:10px;width:100%;text-align:center;border:1px solid;border-collapse:collapse;">
+        <tr style="background:#32E0C4;">
           <th style="border:1px solid;">Type</th>
           <th style="border:1px solid;">Length</th>
           <th style="border:1px solid;">Sleeve</th>
@@ -116,11 +121,11 @@ export default function AddLengths ({route,navigation}) {
   const pyjamatable = () => {
      let t = '';
      if (pyjamaItems.length>0){
-       t = t + `<h3 ">
+       t = t + `<b>
           Pyjama 
-        </h3>
-        <table style="width:100%;text-align:center;border:1px solid;border-collapse:collapse;">
-        <tr>
+        </b>
+        <table style="border-radius:10px;width:100%;text-align:center;border:1px solid;border-collapse:collapse;">
+        <tr style="background:#32E0C4";>
           <th style="border:1px solid;">Type</th>
           <th style="border:1px solid;">Length</th>
           <th style="border:1px solid;">Bottom</th>
@@ -151,16 +156,16 @@ export default function AddLengths ({route,navigation}) {
      if (noteItems.length>0){
        t = t + 
        `
-       <h3>
+       <b>
           Notes
-        </h3>
-        <table style="width:100%;text-align:center;border:1px solid;border-collapse:collapse;">
+        </b>
+        <table style="border-radius:10px;width:100%;background:#eeeeee;padding:20px;border-radius:10px">
        `
        for (let i in noteItems) {
          const item = noteItems[i]
          t = t +
           `<tr>
-             <td style="border:1px solid;">${item.value}</td>
+             <td style="">${item.value}</td>
            </tr>`
        }
        t = t+ `</table>`
@@ -173,22 +178,51 @@ export default function AddLengths ({route,navigation}) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
       </head>
-      <body style="text-align: center;">
+      <body style="padding:30px">
       <h1 style="font-size: 50px; font-weight: bold;">
         Alif Boutique
       </h1>
-      <h3 style="text-aligh:center">
+      <div>
+      <br>
+      <br>
+      </div>
+      <div>
+      <h4>
+      Order Billed to
+      </h4>
+      <p>
+       ${routeParam.linkingObjects("Customer","orders")[0].name}
+       <br>
+       ${routeParam.linkingObjects("Customer","orders")[0].contact}
+       <br>
+       ${routeParam.linkingObjects("Customer","orders")[0].address}
+       <br>
+       <span style="font-size:14px"> <b> Order Placed at:</b> ${routeParam.createdAt.toDateString()}</span>
+       <br>
+       <span style="font-size:14px"> <b> Invoice Generated at :</b> ${Date().toString()}</span>
+      </p>
+      </div>
+      <h4 style="text-aligh:left">
         Order Summary
-      </h3>
+      </h4>
+      <hr>
+      <br>
       <div style="text-center"/>
         ${sayyatable()}
+        <br>
         ${kurtatable()}
+        <br>
         ${pyjamatable()}
+        <br>
         ${notetable()}
-        <h3>Total Sayya Cost is: ${totalSayyaCost}</h3>
-        <h3>Total Kurta Cost is: ${totalKurtaCost}</h3>
-        <h3>Total Pyjama Cost is: ${totalPyjamaCost}</h3>
-        <h1>Total Cost is: ${totalSayyaCost+totalKurtaCost+totalPyjamaCost}</h1>
+        <p>
+        Total Sayya Cost is: <u>${totalSayyaCost}/- ₹</u>
+        <br>
+        Total Kurta Cost is: <u>${totalKurtaCost}/- ₹</u>
+        <br>
+        Total Pyjama Cost is: <u>${totalPyjamaCost}/- ₹</u>
+        </p>
+        <b>Total Cost is: <u>${totalSayyaCost+totalKurtaCost+totalPyjamaCost}/- ₹</u></b>
       </div>
       </body>
       </html>
@@ -235,53 +269,81 @@ export default function AddLengths ({route,navigation}) {
       }
 
   const onSayyaSubmit= (type:string,length:string,cost:number)=>{
-    alert("values = :"+ cost)
-    realm.write(()=>{
-      const newSayya = new Sayya(realm,type,length,cost);
-      routeParam.sayyas.push(newSayya)
-      realm.create("Order",routeParam,"modified")
-      alert("Sayya Lengths Added")
-    })
+    try{
+      realm.write(()=>{
+        const newSayya = new Sayya(realm,type,length,cost);
+        routeParam.sayyas.push(newSayya)
+        realm.create("Order",routeParam,"modified")
+        alert("Sayya Lengths Added")
+      })
+    }
+    catch(e){
+        alert(e)
+      }
   }
   const onKurtaSubmit= (type:string,length:string,shoulders:string,sleeve:string,chest:string,waist:string,hip:string,collar:string,cost:number)=>{
-    realm.write(()=>{
-      const newKurta= new Kurta(realm,type,length,shoulders,sleeve,chest,waist,hip,collar,cost);
-      routeParam.kurtas.push(newKurta)
-      realm.create("Order",routeParam,"modified")
-      alert("Kurta Lengths Added")
-    })
+    try{
+      realm.write(()=>{
+        const newKurta= new Kurta(realm,type,length,shoulders,sleeve,chest,waist,hip,collar,cost);
+        routeParam.kurtas.push(newKurta)
+        realm.create("Order",routeParam,"modified")
+        alert("Kurta Lengths Added")
+      })
+    }
+    catch(e){
+        alert(e)
+    }
   }
   const onPyjamaSubmit= (type:string,length:string,waist:string,bottom:string,cost:number)=>{
-    realm.write(()=>{
-      const newPyjama= new Pyjama(realm,type,length,waist,bottom,cost);
-      routeParam.pyjamas.push(newPyjama)
-      realm.create("Order",routeParam,"modified")
-      alert("Pyjama Lengths Added")
-    })
+    try{
+      realm.write(()=>{
+        const newPyjama= new Pyjama(realm,type,length,waist,bottom,cost);
+        routeParam.pyjamas.push(newPyjama)
+        realm.create("Order",routeParam,"modified")
+        alert("Pyjama Lengths Added")
+      })
+    }
+    catch(e){
+      alert(e)
+    }
+
   }
   const onNoteSubmit= (value:string)=>{
-    realm.write(()=>{
-      const newNote = new Note(realm,value);
-      routeParam.note.push(newNote)
-      realm.create("Order",routeParam,"modified")
-      alert("Note Created")
-    })
+    try{
+      realm.write(()=>{
+        const newNote = new Note(realm,value);
+        routeParam.note.push(newNote)
+        realm.create("Order",routeParam,"modified")
+        alert("Note Created")
+      })
+    }
+    catch(e){
+        alert(e)
+      }
+
   }
 
   const onObjectDelete= (arr)=>{
-    realm.write(()=>{
-        realm.delete(arr)
-        alert("Successfully Deleted")
-      })
+    try{
+      realm.write(()=>{
+          realm.delete(arr)
+          alert("Successfully Deleted")
+        })
+    }
+    catch(e){
+        alert(e)
+      }
   }
 
 
   const onDeleteOrder= (arr)=>{
-    realm.write(()=>{
-        realm.delete(arr)
-        alert("Order Deleted")
-        navigation.navigate("Orders")
-      })
+    try{
+      realm.write(()=>{
+          realm.delete(arr)
+          alert("Order Deleted")
+          navigation.navigate("Orders")
+        })
+    }catch(e){alert(e)}
    } 
 
 
@@ -321,6 +383,18 @@ export default function AddLengths ({route,navigation}) {
       ))
     ) 
   }
+
+
+  useEffect(() => {
+    realm.subscriptions.update(mutableSubs => {
+      mutableSubs.add(realm.objects(Customer));
+      mutableSubs.add(realm.objects(Order));
+      mutableSubs.add(realm.objects(Sayya));
+      mutableSubs.add(realm.objects(Kurta));
+      mutableSubs.add(realm.objects(Pyjama));
+      mutableSubs.add(realm.objects(Note));
+    });
+  }, [realm, Customer, Order, Sayya, Kurta, Pyjama, Note]);
 
 
 	return(

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Image,Pressable,View,StyleSheet,Text, ScrollView ,TextInput} from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 const {useRealm} = TaskRealmContext;
 import {Customer} from '../../models/Task';
 import {TaskRealmContext} from '../../models';
@@ -40,20 +40,32 @@ export default function CreateNewUser  ({route})
   imageUri && console.log({uri: imageUri.slice(0, 100)});
 
   const realm = useRealm();
+  console.log("list of subscriptions:",realm.subscriptions)
   
   const handleCreate= () => {
-      console.log("tried to call realm write")
-      realm.write(() => {
-        realm.create(
-          "Customer",
-          new Customer(realm, name, age,contact,address,imageUri),
-          "modified"
-        )
-        setNotification("Customer Created ")
-        alert("Customer Created")
-      });
+      console.log("tried to call realm subs")
+      try{
+        realm.write(() => {
+          realm.create(
+            "Customer",
+            new Customer(realm, name, age,contact,address,imageUri),
+            "modified"
+          )
+          setNotification("Customer Created ")
+          alert("Customer Created")
+        })
+
+      }
+      catch(e){
+          alert(e)
+        }
+
+
   };
-        console.log(useQuery(Customer))
+
+
+
+  console.log(useQuery(Customer))
 
 	return(
 

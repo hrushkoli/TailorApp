@@ -15,7 +15,6 @@ type NoteItemProps = {
 
 export const NoteItem = React.memo<NoteItemProps>(
   ({arr,onDelete}) => {
-    console.log("Inside LengthItem : arr is ",arr)
     return (
     <View style={styles.orders }>
       <Pressable style={styles.descriptionContainer} >

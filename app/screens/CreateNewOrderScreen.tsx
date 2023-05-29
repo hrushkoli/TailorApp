@@ -31,19 +31,29 @@ export default function CreateNewOrderScreen({navigation}) {
 
   const onToggleStatus = (order)=>{
     const orderId = new Realm.BSON.ObjectID(order._id)
-    realm.write(
-    ()=>{
-        const selectedOrder = realm.objectForPrimaryKey("Order",orderId)
-        selectedOrder.isComplete = !selectedOrder.isComplete
-      }
-    )
+    try{
+        realm.write(
+        ()=>{
+          const selectedOrder = realm.objectForPrimaryKey("Order",orderId)
+          selectedOrder.isComplete = !selectedOrder.isComplete
+          }
+        )
+    }
+    catch (e){
+      alert(e)
+    }
   }
   const onDeleteOrder= (order)=>{
     alert("onDeleteOrder")
-    realm.write(()=>{
+    try{
+      realm.write(()=>{
         realm.delete(order)
         alert("Order Deleted")
       })
+    }
+    catch (e){
+      alert(e)
+      }
    } 
 
   const navigateToLengths= (arr) =>{

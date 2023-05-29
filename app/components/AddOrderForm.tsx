@@ -29,7 +29,6 @@ export const AddOrderForm: React.FC<AddOrderFormProps> = ({onSubmit}) => {
   };
 
   useEffect(()=>{
-      console.log("date seleceted: ",date)
     },)
 
   return (

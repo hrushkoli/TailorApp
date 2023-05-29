@@ -15,7 +15,6 @@ type KurtaItemProps = {
 
 export const KurtaItem = React.memo<KurtaItemProps>(
   ({arr,onDelete}) => {
-    console.log("Inside LengthItem : arr is ",arr)
     return (
     <View style={styles.orders }>
       <Pressable style={styles.descriptionContainer} >
