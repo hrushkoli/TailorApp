@@ -64,6 +64,13 @@ export default function CreateNewUser  ({route})
   };
 
 
+  useEffect(() => {
+    realm.subscriptions.update(mutableSubs => {
+      mutableSubs.add(realm.objects(Customer));
+    });
+  }, [realm, Customer]);
+
+
 
   console.log(useQuery(Customer))
 

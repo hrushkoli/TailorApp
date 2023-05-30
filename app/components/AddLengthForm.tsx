@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
+  Image,
   TextInput,
   Pressable,
   Platform,
@@ -12,12 +13,13 @@ import { buttonStyles } from '../styles/button';
 import colors from '../styles/colors';
 import { shadows } from '../styles/shadows';
 import DropDownPicker from 'react-native-dropdown-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 type AddLengthFormProps = {
   onSayyaSubmit: (type: string, length: string, cost:number) => void;
   onKurtaSubmit: (type: string, length: string, shoulders: string, sleeve: string, chest: string, waist: string, hip: string, collar: string, cost:number ) => void;
   onPyjamaSubmit: (type: string, length: string, waist: string, bottom: string,cost:number) => void;
-  onNoteSubmit: (value: string) => void;
+  onNoteSubmit: (value: string,userImage: string) => void;
 };
 
 export const AddLengthForm: React.FC<AddLengthFormProps> = ({ 
@@ -26,6 +28,8 @@ export const AddLengthForm: React.FC<AddLengthFormProps> = ({
   onPyjamaSubmit,
   onNoteSubmit
   }) => {
+
+
   const [sayyaConcat,setSayyaConcat] = useState(false)
   const [kurtaConcat,setKurtaConcat] = useState(false)
   const [pyjamaConcat,setPyjamaConcat] = useState(false)
@@ -82,8 +86,33 @@ export const AddLengthForm: React.FC<AddLengthFormProps> = ({
     onPyjamaSubmit(pyjamaTypeValue,pyjamaLength,pyjamaWaist,pyjamaBottom,pyjamaCost)
   };
   const handleNoteSubmit= () => {
-    onNoteSubmit(noteValue)
+    onNoteSubmit(noteValue,imageUri)
+    imageUri=""
   };
+
+
+  const [pickerResult, setPickerResult] = useState<ImagePickerResult>();
+  const _pickImg = async () => {
+    await ImagePicker.requestCameraPermissionsAsync()
+    await ImagePicker.getCameraPermissionsAsync()
+    setPickerResult(await ImagePicker.launchCameraAsync({
+      base64: true,
+      allowsEditing: false,
+      aspect: [4, 3],
+    })).then((data)=>console.log("pickerResult",pickerResult,"data",data))
+  };
+  const _pickImgLibrary = async () => {
+    await ImagePicker.requestMediaLibraryPermissionsAsync()
+    await ImagePicker.getMediaLibraryPermissionsAsync()
+    setPickerResult(await ImagePicker.launchImageLibraryAsync({
+      base64: true,
+      allowsEditing: false,
+      aspect: [4, 3],
+    })).then((data)=>console.log("pickerResult",pickerResult,"data",data))
+  };
+
+  let imageUri = pickerResult ? `data:image/jpg;base64,${pickerResult.base64}` : null;
+  imageUri && console.log({uri: imageUri.slice(0, 100)});
 
 
   return (
@@ -91,6 +120,12 @@ export const AddLengthForm: React.FC<AddLengthFormProps> = ({
 
       <View style={styles.form4}>
         <View style={{ flexDirection: 'column', flex: 1 }}>
+        {pickerResult
+          && <Image
+              source={{uri: imageUri}}
+              style={{ width: 200, height: 200,margin:8 }}
+            />
+          }
           <TextInput
             value={noteValue}
             placeholder="Enter Note"
@@ -99,6 +134,8 @@ export const AddLengthForm: React.FC<AddLengthFormProps> = ({
             autoCapitalize="none"
             style={styles.textInput}
           />
+        <Pressable style={styles.button} onPress={_pickImg} title="Camera Upload  " ><Text style={{color:colors.white}}>Camera Upload</Text></Pressable>
+        <Pressable style={styles.button} onPress={_pickImgLibrary} title="Upload Image " ><Text style={{color:colors.white}}>Select Image</Text></Pressable>
         </View>
           <Pressable onPress={handleNoteSubmit} style={styles.submit}>
             <Text style={styles.icon}>＋</Text>
@@ -358,6 +395,18 @@ const styles = StyleSheet.create({
       fontWeight:"bold"
     }
   ,
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    elevation: 3,
+    backgroundColor: 'black',
+    marginTop:5,
+    marginBottom:5,
+    borderRadius:10,
+    width:200
+  },
   form1: {
     height: 'auto',
     zIndex:3,

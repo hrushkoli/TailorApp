@@ -8,6 +8,11 @@
     ],
     "android": {
       "package": "com.hrushkoli.AlifBoutique"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bb69b395-1eb4-443d-9487-210dddd301c3"
+      }
     }
   }
 }

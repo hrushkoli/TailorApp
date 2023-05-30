@@ -1,6 +1,6 @@
 import React from 'react';
 import Realm from 'realm';
-import {View, Text, Pressable, StyleSheet} from 'react-native';
+import {View, Text,Image, Pressable, StyleSheet} from 'react-native';
 
 import {shadows} from '../styles/shadows';
 import colors from '../styles/colors';
@@ -21,6 +21,13 @@ export const NoteItem = React.memo<NoteItemProps>(
             <Text style={styles.text}>
             Note : {arr.value} 
             </Text>
+            {arr.userImage && 
+            <Image
+              source={{uri: arr.userImage}}
+              style={{ width: 200, height: 200,margin:8 }}
+            />
+
+              }
       </Pressable>
       <Pressable
         onPress={ev=>onDelete(arr)}

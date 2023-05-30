@@ -308,10 +308,10 @@ export default function AddLengths ({route,navigation}) {
     }
 
   }
-  const onNoteSubmit= (value:string)=>{
+  const onNoteSubmit= (value:string,userImage:string)=>{
     try{
       realm.write(()=>{
-        const newNote = new Note(realm,value);
+        const newNote = new Note(realm,value,userImage);
         routeParam.note.push(newNote)
         realm.create("Order",routeParam,"modified")
         alert("Note Created")

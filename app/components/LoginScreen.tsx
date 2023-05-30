@@ -99,16 +99,6 @@ export const LoginScreen = () => {
           <Text style={buttonStyles.text}>Login</Text>
         </Pressable>
 
-        <Pressable
-          onPress={handleRegister}
-          style={[
-            styles.button,
-            authState === AuthState.Loading && styles.buttonDisabled,
-            styles.registerButton,
-          ]}
-          disabled={authState === AuthState.Loading}>
-          <Text style={buttonStyles.text}>Register</Text>
-        </Pressable>
       </View>
     </View>
   );

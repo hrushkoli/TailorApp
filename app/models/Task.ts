@@ -104,9 +104,10 @@ export class Pyjama extends Realm.Object<Pyjama> {
 export class Note extends Realm.Object<Note> {
   _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
   value: string;
+  userImage? : string;
   static primaryKey = '_id';
   item: {type: 'linkingObjects', objectType: 'Order', property: 'note'}
-  constructor(realm: Realm, value: string){
-    super(realm, {value})
+  constructor(realm: Realm, value: string,userImage: string){
+    super(realm, {value,userImage})
   }
 }
