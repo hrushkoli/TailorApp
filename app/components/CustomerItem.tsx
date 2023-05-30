@@ -10,10 +10,11 @@ import {Customer} from '../models/Task';
 type CustomerItemProps = {
   customers: Customer & Realm.Object
   onClick: (customers : Customer & Realm.Object) => void
+  onDeleteClick: (customer: Customer & Realm.Object) => void
 };
 
 export const CustomerItem = React.memo<CustomerItemProps>(
-  ({customers,onClick}) => {
+  ({customers,onClick,onDeleteClick}) => {
     return (
       <View style={styles.customer}>
         <Pressable 
@@ -29,12 +30,17 @@ export const CustomerItem = React.memo<CustomerItemProps>(
             {"\n"}
             ({customers.contact})
           </Text>
-          </View>
+        </View>
         </Pressable>
           <Image
             source={{uri: customers.userImage}}
             style={{ width: 100, height: 100, justifyContent:"center",marginRight:8,borderRadius:5}}
           />
+          <Pressable
+            onPress={ev=>onDeleteClick(customers)}
+            style={[styles.status,styles.delete]}>
+            <Text style={styles.icon}>x</Text>
+          </Pressable>
         
       </View>
     );
@@ -52,6 +58,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     ...shadows,
   },
+  delete: {
+    backgroundColor: colors.darkRed,
+  },
   customerName:{
     paddingHorizontal: 10,
     color: colors.black,
@@ -67,11 +76,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   status: {
-    width: 50,
-    height: '100%',
+    width: 30,
+    height: 25,
+    zIndex:100,
     justifyContent: 'center',
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
+    paddingVertical:2,
+    borderRadius: 5,
     backgroundColor: colors.gray,
   },
   completed: {

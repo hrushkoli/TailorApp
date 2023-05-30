@@ -17,6 +17,7 @@ const {useRealm,useObject} = TaskRealmContext;
 
 export default function ExistingUser ({route,navigation}) {
   const realm = useRealm();
+  try{
   const routeParam = route.params.customers
   const customer = useObject(Customer,routeParam._id)
   console.log("customer : ",customer)
@@ -149,6 +150,7 @@ export default function ExistingUser ({route,navigation}) {
 		</ScrollView>
 
 	)	
+  }catch(e){alert("Customer Does not Exist")}
 
 }
 

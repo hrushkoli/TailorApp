@@ -26,7 +26,18 @@ export default function HistoryScreen ({navigation}) {
   }
 
   const navigateToOrder = (customers)=>{
-      navigation.navigate("Orders",{customers})
+      try{
+        navigation.navigate("Orders",{customers})
+      }catch(e){alert(e)}
+    }
+  
+  const onDeleteClick= (customers)=>{
+      try{
+        realm.write(()=>{
+            realm.delete(customers)
+            alert("Customer Deleted")
+          })
+      }catch(e){alert(e)}
     }
 
 	return(
@@ -47,6 +58,7 @@ export default function HistoryScreen ({navigation}) {
       filteredCustomers.map((item)=>(
         <CustomerItem 
         onClick= {navigateToOrder}
+        onDeleteClick = {onDeleteClick}
         customers={item}/>
       ))
     ) }
@@ -54,6 +66,7 @@ export default function HistoryScreen ({navigation}) {
       existingCustomers.map((item)=>(
         <CustomerItem 
         onClick= {navigateToOrder}
+        onDeleteClick = {onDeleteClick}
         customers={item}/>
       ))
     )
